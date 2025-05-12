@@ -122,7 +122,7 @@ class RockPaperScissor {
 				},
 			};
 			this.room.broadcastMessage(resultMsg);
-			this.resetTimer();
+			this.resetGame();
 		}
 	}
 	public handleReplay(ws: ServerWebSocket<ClientData>) {
@@ -130,10 +130,9 @@ class RockPaperScissor {
 			return;
 		}
 
-		if (this.timer || Object.keys(this.game).length !== 2) {
+		if (this.timer || Object.keys(this.game).length < 1) {
 			return;
 		}
-
 		this.replay.push(ws.data.username);
 		if (this.replay.length !== 2) {
 			const msg: Message = {
