@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "multiplayer-games",
+      "dependencies": {
+        "zod": "^3.24.4",
+      },
       "devDependencies": {
         "@biomejs/biome": "1.9.4",
         "@types/bun": "latest",
@@ -40,5 +43,7 @@
     "typescript": ["typescript@5.8.3", "https://nxrm.jenius.tech/repository/npm-group/typescript/-/typescript-5.8.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
     "undici-types": ["undici-types@6.21.0", "https://nxrm.jenius.tech/repository/npm-group/undici-types/-/undici-types-6.21.0.tgz", {}, "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="],
+
+    "zod": ["zod@3.24.4", "https://nxrm.jenius.tech/repository/npm-group/zod/-/zod-3.24.4.tgz", {}, "sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg=="],
   }
 }
