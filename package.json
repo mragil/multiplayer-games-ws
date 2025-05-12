@@ -1,20 +1,17 @@
 {
-  "name": "multiplayer-games",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
+  "name": "multiplayer-games-monorepo",
+  "version": "0.0.1",
+  "description": "Multiplayer Games with WS",
+  "workspaces": ["apps/*"],
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "concurrently": "^9.1.2"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
-  "dependencies": {
-    "zod": "^3.24.4"
-  },
   "scripts": {
-    "dev": "bun index.ts --hot",
-    "start": "bun index.ts"
+    "start": "concurrently 'bun apps/backend/index.ts' 'cd apps/web && bun --bun run dev'"
   }
 }

@@ -32,9 +32,9 @@ class Room {
 		return this.members;
 	}
 
-  public getMember(identifier: number) {
-    return this.members[identifier];
-  }
+	public getMember(identifier: number) {
+		return this.members[identifier];
+	}
 
 	public getGameName() {
 		return this.game?.getGameName();
