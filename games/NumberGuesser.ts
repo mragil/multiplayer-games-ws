@@ -15,7 +15,16 @@ import type Room from '../Room';
 const {
 	GAME_CONFIGURATION: { TARGET_LIMIT, FIRST_PLAYER, TIMER_LIMIT },
 	GAMES: { NUMBER_GUESSER },
-	ROOM_OPERATION: { REPLAY, MODAL_INFO, PLAYER_TURN },
+	ROOM_OPERATION: {
+		REPLAY,
+		MODAL_INFO,
+		PLAYER_TURN,
+		GAME,
+		INFO,
+		RESULT,
+		TIMER,
+		OPPONENT,
+	},
 } = Constant;
 
 class NumberGuesser {
@@ -30,6 +39,7 @@ class NumberGuesser {
 	private counter: number;
 	private timerPlayer?: Timer;
 	private replay: string[];
+	private isGameFinished: boolean;
 
 	constructor(room: Room) {
 		this.name = NUMBER_GUESSER;
@@ -52,12 +62,17 @@ class NumberGuesser {
 		this.currentPlayer = this.room.getMembers()[FIRST_PLAYER]!;
 		this.minLimit = 0;
 		this.maxLimit = 0;
+		this.isGameFinished = false;
 
 		this.informGameStart();
 	}
 
 	public getGameName() {
 		return NUMBER_GUESSER;
+	}
+
+	private setIsGameFinished(input: boolean) {
+		this.isGameFinished = input;
 	}
 
 	private findNextPlayer() {
@@ -93,6 +108,7 @@ class NumberGuesser {
 	private resetGame() {
 		this.replay = [];
 		this.resetTimer();
+		this.setIsGameFinished(false);
 		for (const username of Object.keys(this.game.player)) {
 			this.game.player[username] = [];
 		}
@@ -111,7 +127,7 @@ class NumberGuesser {
 			this.timerPlayer = setInterval(() => {
 				if (this.counter === 0) {
 					this.room.broadcastMessage({
-						type: 'TIMER',
+						type: TIMER,
 						text: 'X',
 					});
 
@@ -120,7 +136,7 @@ class NumberGuesser {
 					this.scores[winner] = this.scores[winner]! + 1;
 
 					this.room.broadcastMessage({
-						type: 'RESULT',
+						type: RESULT,
 						text: `${winner}`,
 						data: {
 							score: this.scores,
@@ -128,9 +144,10 @@ class NumberGuesser {
 						},
 					});
 					this.resetTimer();
+					this.setIsGameFinished(true);
 				} else {
 					this.room.sendMessage(this.currentPlayer, {
-						type: 'TIMER',
+						type: TIMER,
 						text: `${this.counter}`,
 					});
 				}
@@ -148,14 +165,14 @@ class NumberGuesser {
 		const members = this.room.getMembers();
 		members.forEach((member, idx) => {
 			this.room.sendMessage(member, {
-				type: 'OPPONENT',
+				type: OPPONENT,
 				text: `${members[(idx + 1) % members.length]?.data.username}`,
 			});
 		});
 
 		// Inform target number range to all player
 		this.room.broadcastMessage({
-			type: 'GAME',
+			type: GAME,
 			text: `${this.minLimit}-${this.maxLimit}`,
 		});
 
@@ -167,6 +184,10 @@ class NumberGuesser {
 		const numberGuessed = z.coerce.number().parse(message.text);
 		const { username } = ws.data;
 
+		if (this.isGameFinished) {
+			return;
+		}
+
 		if (
 			numberGuessed < this.minLimit ||
 			numberGuessed > this.maxLimit ||
@@ -174,7 +195,7 @@ class NumberGuesser {
 			numberGuessed === this.maxLimit
 		) {
 			this.room.sendMessage(ws, {
-				type: 'INFO',
+				type: INFO,
 				text: `The number you guessed must be bigger than ${this.minLimit} and less than ${this.maxLimit}`,
 			});
 			return;
@@ -192,7 +213,7 @@ class NumberGuesser {
 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
 			this.scores[username] = this.scores[username]! + 1;
 			this.room.broadcastMessage({
-				type: 'RESULT',
+				type: RESULT,
 				text: username,
 				data: {
 					game: this.game,
@@ -200,11 +221,12 @@ class NumberGuesser {
 				},
 			});
 			this.resetTimer();
+			this.setIsGameFinished(true);
 			return;
 		}
 
 		this.room.broadcastMessage({
-			type: 'GAME',
+			type: GAME,
 			text: this.calculateTargetNumberRange(numberGuessed, this.targetNumber),
 		});
 

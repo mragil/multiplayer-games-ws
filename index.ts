@@ -70,15 +70,14 @@ const server = Bun.serve<ClientData, null>({
 	},
 	port: Bun.env.PORT,
 	websocket: {
-		open(ws) {
+		open(ws) {			
 			const { room, username, genre } = ws.data;
+			console.log('WS OPEN', { room, username });
 			const existingRoom = PlaygroundNG.getRoom(room);
 
 			if (!existingRoom) {
-				console.log('NEW ROOM', { room, username });
 				PlaygroundNG.initializeRoom(room, ws, genre);
 			} else {
-				console.log('EXISTING ROOM', { room, username });
 				existingRoom.addMember(ws);
 			}
 		},
@@ -89,7 +88,7 @@ const server = Bun.serve<ClientData, null>({
 			const parsedMessage: Message = JSON.parse(message.toString());
 			const existingRoom = PlaygroundNG.getRoom(room);
 			if (!existingRoom) {
-				console.log('ERROR NO ROOM');
+				console.error('ERROR NO ROOM');
 				return;
 			}
 
@@ -107,7 +106,7 @@ const server = Bun.serve<ClientData, null>({
 					break;
 				}
 				default: {
-					console.log('NOTHING MASE');
+					console.error('NOTHING MASE');
 				}
 			}
 		},
@@ -117,7 +116,7 @@ const server = Bun.serve<ClientData, null>({
 
 			const existingRoom = PlaygroundNG.getRoom(room);
 			if (!existingRoom) {
-				console.log('ERROR NO ROOM');
+				console.error('ERROR NO ROOM');
 				return;
 			}
 			existingRoom.handleLeave(ws);
