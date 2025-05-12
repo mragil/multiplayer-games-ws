@@ -12,7 +12,8 @@ import type {
 import calculateGame from './calculateGame';
 
 const {
-	ROOM_OPERATION: { REPLAY, TIMER, RESULT },
+	GAME_CONFIGURATION: { TIMER_LIMIT },
+	ROOM_OPERATION: { REPLAY, RESULT, TIMER },
 	GAMES: { ROCK_PAPER_SCISSOR },
 } = Constant;
 
@@ -27,7 +28,7 @@ class RockPaperScissor {
 	constructor(room: Room) {
 		this.room = room;
 		this.game = {};
-		this.counter = 15;
+		this.counter = TIMER_LIMIT;
 		this.replay = [];
 		this.scores = this.room.getMembers()?.reduce((acc: Score, member) => {
 			acc[member.data.username] = 0;
@@ -145,7 +146,7 @@ class RockPaperScissor {
 		this.resetGame();
 	}
 	public handlePlayerLeave(username: string) {
-		this.counter = 15;
+		this.counter = TIMER_LIMIT;
 		this.replay = [];
 		delete this.scores[username];
 		delete this.game[username];

@@ -26,7 +26,8 @@ const ROOM_OPERATION = {
 
 const GAME_CONFIGURATION = {
 	FIRST_PLAYER: 0,
-	TARGET_LIMIT: 100
+	TARGET_LIMIT: 100,
+	TIMER_LIMIT: 10,
 }
 
 export default {

@@ -13,9 +13,9 @@ import Constant from '../Constant';
 import type Room from '../Room';
 
 const {
-	GAME_CONFIGURATION: { TARGET_LIMIT, FIRST_PLAYER },
+	GAME_CONFIGURATION: { TARGET_LIMIT, FIRST_PLAYER, TIMER_LIMIT },
 	GAMES: { NUMBER_GUESSER },
-  ROOM_OPERATION: { REPLAY, MODAL_INFO }
+	ROOM_OPERATION: { REPLAY, MODAL_INFO, PLAYER_TURN },
 } = Constant;
 
 class NumberGuesser {
@@ -35,7 +35,7 @@ class NumberGuesser {
 		this.name = NUMBER_GUESSER;
 		this.room = room;
 		this.targetNumber = 0;
-		this.counter = 99;
+		this.counter = TIMER_LIMIT;
 		this.game = {
 			targetNumber: 0,
 			player: this.room.getMembers().reduce((acc: NGList, member) => {
@@ -86,7 +86,7 @@ class NumberGuesser {
 
 	private resetTimer() {
 		clearInterval(this.timerPlayer);
-		this.counter = 99;
+		this.counter = TIMER_LIMIT;
 		this.timerPlayer = undefined;
 	}
 
@@ -101,7 +101,7 @@ class NumberGuesser {
 
 	private informPlayerTurn() {
 		const msg: Message = {
-			type: 'PLAYER_TURN',
+			type: PLAYER_TURN,
 			text: `${this.currentPlayer.data.username}}`,
 		};
 		this.room.broadcastMessage(msg);
@@ -237,7 +237,7 @@ class NumberGuesser {
 	}
 
 	public handlePlayerLeave(username: string) {
-		this.counter = 99;
+		this.counter = TIMER_LIMIT;
 		this.replay = [];
 		delete this.scores[username];
 		delete this.game.player[username];
