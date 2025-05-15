@@ -1,7 +1,6 @@
 {
   "name": "multiplayer-games-monorepo",
-  "version": "0.0.1",
-  "description": "Multiplayer Games with WS",
+  "private": true,
   "workspaces": ["apps/*"],
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
